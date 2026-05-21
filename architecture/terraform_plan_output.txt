@@ -1,0 +1,268 @@
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create[0m
+
+Terraform will perform the following actions:
+
+[1m  # aws_cloudwatch_metric_alarm.rds_cpu_high[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudwatch_metric_alarm" "rds_cpu_high" {
+      [32m+[0m[0m actions_enabled                       = true
+      [32m+[0m[0m alarm_actions                         = [
+          [32m+[0m[0m "arn:aws:sns:us-east-1:118688039965:webapp-dev-alerts",
+        ]
+      [32m+[0m[0m alarm_description                     = "RDS CPU > 80%"
+      [32m+[0m[0m alarm_name                            = "webapp-dev-rds-cpu-high"
+      [32m+[0m[0m arn                                   = (known after apply)
+      [32m+[0m[0m comparison_operator                   = "GreaterThanThreshold"
+      [32m+[0m[0m dimensions                            = {
+          [32m+[0m[0m "DBInstanceIdentifier" = "webapp-dev-postgres"
+        }
+      [32m+[0m[0m evaluate_low_sample_count_percentiles = (known after apply)
+      [32m+[0m[0m evaluation_periods                    = 2
+      [32m+[0m[0m id                                    = (known after apply)
+      [32m+[0m[0m metric_name                           = "CPUUtilization"
+      [32m+[0m[0m namespace                             = "AWS/RDS"
+      [32m+[0m[0m ok_actions                            = [
+          [32m+[0m[0m "arn:aws:sns:us-east-1:118688039965:webapp-dev-alerts",
+        ]
+      [32m+[0m[0m period                                = 300
+      [32m+[0m[0m statistic                             = "Average"
+      [32m+[0m[0m tags                                  = {
+          [32m+[0m[0m "Name" = "webapp-dev-rds-cpu-alarm"
+        }
+      [32m+[0m[0m tags_all                              = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Name"        = "webapp-dev-rds-cpu-alarm"
+          [32m+[0m[0m "Project"     = "webapp"
+        }
+      [32m+[0m[0m threshold                             = 80
+      [32m+[0m[0m treat_missing_data                    = "missing"
+    }
+
+[1m  # aws_cloudwatch_metric_alarm.rds_storage_low[0m will be created
+[0m  [32m+[0m[0m resource "aws_cloudwatch_metric_alarm" "rds_storage_low" {
+      [32m+[0m[0m actions_enabled                       = true
+      [32m+[0m[0m alarm_actions                         = [
+          [32m+[0m[0m "arn:aws:sns:us-east-1:118688039965:webapp-dev-alerts",
+        ]
+      [32m+[0m[0m alarm_description                     = "RDS free storage < 5GB"
+      [32m+[0m[0m alarm_name                            = "webapp-dev-rds-storage-low"
+      [32m+[0m[0m arn                                   = (known after apply)
+      [32m+[0m[0m comparison_operator                   = "LessThanThreshold"
+      [32m+[0m[0m dimensions                            = {
+          [32m+[0m[0m "DBInstanceIdentifier" = "webapp-dev-postgres"
+        }
+      [32m+[0m[0m evaluate_low_sample_count_percentiles = (known after apply)
+      [32m+[0m[0m evaluation_periods                    = 1
+      [32m+[0m[0m id                                    = (known after apply)
+      [32m+[0m[0m metric_name                           = "FreeStorageSpace"
+      [32m+[0m[0m namespace                             = "AWS/RDS"
+      [32m+[0m[0m period                                = 300
+      [32m+[0m[0m statistic                             = "Average"
+      [32m+[0m[0m tags                                  = {
+          [32m+[0m[0m "Name" = "webapp-dev-rds-storage-alarm"
+        }
+      [32m+[0m[0m tags_all                              = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Name"        = "webapp-dev-rds-storage-alarm"
+          [32m+[0m[0m "Project"     = "webapp"
+        }
+      [32m+[0m[0m threshold                             = 5368709120
+      [32m+[0m[0m treat_missing_data                    = "missing"
+    }
+
+[1m  # aws_db_instance.main[0m will be created
+[0m  [32m+[0m[0m resource "aws_db_instance" "main" {
+      [32m+[0m[0m address                               = (known after apply)
+      [32m+[0m[0m allocated_storage                     = 20
+      [32m+[0m[0m apply_immediately                     = false
+      [32m+[0m[0m arn                                   = (known after apply)
+      [32m+[0m[0m auto_minor_version_upgrade            = true
+      [32m+[0m[0m availability_zone                     = (known after apply)
+      [32m+[0m[0m backup_retention_period               = 7
+      [32m+[0m[0m backup_target                         = (known after apply)
+      [32m+[0m[0m backup_window                         = "03:00-04:00"
+      [32m+[0m[0m ca_cert_identifier                    = (known after apply)
+      [32m+[0m[0m character_set_name                    = (known after apply)
+      [32m+[0m[0m copy_tags_to_snapshot                 = false
+      [32m+[0m[0m database_insights_mode                = (known after apply)
+      [32m+[0m[0m db_name                               = "appdb"
+      [32m+[0m[0m db_subnet_group_name                  = "webapp-dev-db-subnet-group"
+      [32m+[0m[0m dedicated_log_volume                  = false
+      [32m+[0m[0m delete_automated_backups              = true
+      [32m+[0m[0m deletion_protection                   = false
+      [32m+[0m[0m domain_fqdn                           = (known after apply)
+      [32m+[0m[0m endpoint                              = (known after apply)
+      [32m+[0m[0m engine                                = "postgres"
+      [32m+[0m[0m engine_lifecycle_support              = (known after apply)
+      [32m+[0m[0m engine_version                        = "15.4"
+      [32m+[0m[0m engine_version_actual                 = (known after apply)
+      [32m+[0m[0m hosted_zone_id                        = (known after apply)
+      [32m+[0m[0m id                                    = (known after apply)
+      [32m+[0m[0m identifier                            = "webapp-dev-postgres"
+      [32m+[0m[0m identifier_prefix                     = (known after apply)
+      [32m+[0m[0m instance_class                        = "db.t3.micro"
+      [32m+[0m[0m iops                                  = (known after apply)
+      [32m+[0m[0m kms_key_id                            = (known after apply)
+      [32m+[0m[0m latest_restorable_time                = (known after apply)
+      [32m+[0m[0m license_model                         = (known after apply)
+      [32m+[0m[0m listener_endpoint                     = (known after apply)
+      [32m+[0m[0m maintenance_window                    = "mon:04:00-mon:05:00"
+      [32m+[0m[0m master_user_secret                    = (known after apply)
+      [32m+[0m[0m master_user_secret_kms_key_id         = (known after apply)
+      [32m+[0m[0m max_allocated_storage                 = 100
+      [32m+[0m[0m monitoring_interval                   = 60
+      [32m+[0m[0m monitoring_role_arn                   = "arn:aws:iam::118688039965:role/webapp-dev-rds-monitoring-role"
+      [32m+[0m[0m multi_az                              = false
+      [32m+[0m[0m nchar_character_set_name              = (known after apply)
+      [32m+[0m[0m network_type                          = (known after apply)
+      [32m+[0m[0m option_group_name                     = (known after apply)
+      [32m+[0m[0m parameter_group_name                  = "webapp-dev-pg15-params"
+      [32m+[0m[0m password                              = (sensitive value)
+      [32m+[0m[0m password_wo                           = (write-only attribute)
+      [32m+[0m[0m performance_insights_enabled          = true
+      [32m+[0m[0m performance_insights_kms_key_id       = (known after apply)
+      [32m+[0m[0m performance_insights_retention_period = (known after apply)
+      [32m+[0m[0m port                                  = (known after apply)
+      [32m+[0m[0m publicly_accessible                   = false
+      [32m+[0m[0m replica_mode                          = (known after apply)
+      [32m+[0m[0m replicas                              = (known after apply)
+      [32m+[0m[0m resource_id                           = (known after apply)
+      [32m+[0m[0m skip_final_snapshot                   = true
+      [32m+[0m[0m snapshot_identifier                   = (known after apply)
+      [32m+[0m[0m status                                = (known after apply)
+      [32m+[0m[0m storage_encrypted                     = true
+      [32m+[0m[0m storage_throughput                    = (known after apply)
+      [32m+[0m[0m storage_type                          = "gp3"
+      [32m+[0m[0m tags                                  = {
+          [32m+[0m[0m "Name" = "webapp-dev-postgres"
+          [32m+[0m[0m "Role" = "primary-database"
+        }
+      [32m+[0m[0m tags_all                              = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Name"        = "webapp-dev-postgres"
+          [32m+[0m[0m "Project"     = "webapp"
+          [32m+[0m[0m "Role"        = "primary-database"
+        }
+      [32m+[0m[0m timezone                              = (known after apply)
+      [32m+[0m[0m username                              = (sensitive value)
+      [32m+[0m[0m vpc_security_group_ids                = [
+          [32m+[0m[0m "sg-0a27225fd747b4fb4",
+        ]
+    }
+
+[1m  # aws_instance.app[0m will be created
+[0m  [32m+[0m[0m resource "aws_instance" "app" {
+      [32m+[0m[0m ami                                  = "ami-0c02fb55956c7d316"
+      [32m+[0m[0m arn                                  = (known after apply)
+      [32m+[0m[0m associate_public_ip_address          = (known after apply)
+      [32m+[0m[0m availability_zone                    = (known after apply)
+      [32m+[0m[0m cpu_core_count                       = (known after apply)
+      [32m+[0m[0m cpu_threads_per_core                 = (known after apply)
+      [32m+[0m[0m disable_api_stop                     = (known after apply)
+      [32m+[0m[0m disable_api_termination              = (known after apply)
+      [32m+[0m[0m ebs_optimized                        = (known after apply)
+      [32m+[0m[0m enable_primary_ipv6                  = (known after apply)
+      [32m+[0m[0m get_password_data                    = false
+      [32m+[0m[0m host_id                              = (known after apply)
+      [32m+[0m[0m host_resource_group_arn              = (known after apply)
+      [32m+[0m[0m iam_instance_profile                 = "webapp-dev-ec2-instance-profile"
+      [32m+[0m[0m id                                   = (known after apply)
+      [32m+[0m[0m instance_initiated_shutdown_behavior = (known after apply)
+      [32m+[0m[0m instance_lifecycle                   = (known after apply)
+      [32m+[0m[0m instance_state                       = (known after apply)
+      [32m+[0m[0m instance_type                        = "t3.micro"
+      [32m+[0m[0m ipv6_address_count                   = (known after apply)
+      [32m+[0m[0m ipv6_addresses                       = (known after apply)
+      [32m+[0m[0m key_name                             = (known after apply)
+      [32m+[0m[0m monitoring                           = (known after apply)
+      [32m+[0m[0m outpost_arn                          = (known after apply)
+      [32m+[0m[0m password_data                        = (known after apply)
+      [32m+[0m[0m placement_group                      = (known after apply)
+      [32m+[0m[0m placement_partition_number           = (known after apply)
+      [32m+[0m[0m primary_network_interface_id         = (known after apply)
+      [32m+[0m[0m private_dns                          = (known after apply)
+      [32m+[0m[0m private_ip                           = (known after apply)
+      [32m+[0m[0m public_dns                           = (known after apply)
+      [32m+[0m[0m public_ip                            = (known after apply)
+      [32m+[0m[0m secondary_private_ips                = (known after apply)
+      [32m+[0m[0m security_groups                      = (known after apply)
+      [32m+[0m[0m source_dest_check                    = true
+      [32m+[0m[0m spot_instance_request_id             = (known after apply)
+      [32m+[0m[0m subnet_id                            = "subnet-0f1a4ee5e1151e0d6"
+      [32m+[0m[0m tags                                 = {
+          [32m+[0m[0m "Name" = "webapp-dev-ec2-app"
+          [32m+[0m[0m "Role" = "application-server"
+        }
+      [32m+[0m[0m tags_all                             = {
+          [32m+[0m[0m "Environment" = "dev"
+          [32m+[0m[0m "ManagedBy"   = "Terraform"
+          [32m+[0m[0m "Name"        = "webapp-dev-ec2-app"
+          [32m+[0m[0m "Project"     = "webapp"
+          [32m+[0m[0m "Role"        = "application-server"
+        }
+      [32m+[0m[0m tenancy                              = (known after apply)
+      [32m+[0m[0m user_data                            = "f306cde3fb6de1032b070f6043f71270b7d52f32"
+      [32m+[0m[0m user_data_base64                     = (known after apply)
+      [32m+[0m[0m user_data_replace_on_change          = false
+      [32m+[0m[0m vpc_security_group_ids               = [
+          [32m+[0m[0m "sg-07e0da2d7ad81540c",
+        ]
+
+      [32m+[0m[0m capacity_reservation_specification (known after apply)
+
+      [32m+[0m[0m cpu_options (known after apply)
+
+      [32m+[0m[0m ebs_block_device (known after apply)
+
+      [32m+[0m[0m enclave_options (known after apply)
+
+      [32m+[0m[0m ephemeral_block_device (known after apply)
+
+      [32m+[0m[0m instance_market_options (known after apply)
+
+      [32m+[0m[0m maintenance_options (known after apply)
+
+      [32m+[0m[0m metadata_options (known after apply)
+
+      [32m+[0m[0m network_interface (known after apply)
+
+      [32m+[0m[0m private_dns_name_options (known after apply)
+
+      [32m+[0m[0m root_block_device {
+          [32m+[0m[0m delete_on_termination = true
+          [32m+[0m[0m device_name           = (known after apply)
+          [32m+[0m[0m encrypted             = true
+          [32m+[0m[0m iops                  = (known after apply)
+          [32m+[0m[0m kms_key_id            = (known after apply)
+          [32m+[0m[0m tags_all              = (known after apply)
+          [32m+[0m[0m throughput            = (known after apply)
+          [32m+[0m[0m volume_id             = (known after apply)
+          [32m+[0m[0m volume_size           = 20
+          [32m+[0m[0m volume_type           = "gp3"
+        }
+    }
+
+[1m  # aws_secretsmanager_secret_version.db_credentials[0m will be created
+[0m  [32m+[0m[0m resource "aws_secretsmanager_secret_version" "db_credentials" {
+      [32m+[0m[0m arn                  = (known after apply)
+      [32m+[0m[0m has_secret_string_wo = (known after apply)
+      [32m+[0m[0m id                   = (known after apply)
+      [32m+[0m[0m secret_id            = "arn:aws:secretsmanager:us-east-1:118688039965:secret:webapp-dev/rds/credentials-CktHsq"
+      [32m+[0m[0m secret_string        = (sensitive value)
+      [32m+[0m[0m secret_string_wo     = (write-only attribute)
+      [32m+[0m[0m version_id           = (known after apply)
+      [32m+[0m[0m version_stages       = (known after apply)
+    }
+
+[1mPlan:[0m [0m5 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  [32m+[0m[0m ec2_instance_id            = (known after apply)
+  [32m+[0m[0m ec2_private_ip             = (known after apply)
+  [32m+[0m[0m rds_endpoint               = (known after apply)
+  [32m+[0m[0m ssm_session_command        = (known after apply)
