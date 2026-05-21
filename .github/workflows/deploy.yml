@@ -38,7 +38,7 @@ jobs:
           docker tag  $ECR_REPOSITORY_URL:$IMAGE_TAG $ECR_REPOSITORY_URL:latest
           docker push $ECR_REPOSITORY_URL:$IMAGE_TAG
           docker push $ECR_REPOSITORY_URL:latest
-          echo "✅ Pushed: $ECR_REPOSITORY_URL:$IMAGE_TAG"
+          echo " Pushed: $ECR_REPOSITORY_URL:$IMAGE_TAG"
 
       - name: Run health check script
         run: |
