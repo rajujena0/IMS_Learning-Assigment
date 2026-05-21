@@ -55,19 +55,19 @@ jobs:
         run: |
           terraform init -backend=false
           terraform validate
-          echo "✅ Terraform config is valid"
+          echo " Terraform config is valid"
 
       - name: Pipeline Summary
         run: |
-          echo "## ✅ Pipeline Results" >> $GITHUB_STEP_SUMMARY
+          echo "##  Pipeline Results" >> $GITHUB_STEP_SUMMARY
           echo "| Step | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Code Checkout | ✅ |" >> $GITHUB_STEP_SUMMARY
-          echo "| AWS Auth | ✅ |" >> $GITHUB_STEP_SUMMARY
-          echo "| Docker Build | ✅ |" >> $GITHUB_STEP_SUMMARY
-          echo "| ECR Push | ✅ |" >> $GITHUB_STEP_SUMMARY
-          echo "| Health Check | ✅ |" >> $GITHUB_STEP_SUMMARY
-          echo "| Terraform Validate | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| Code Checkout |  |" >> $GITHUB_STEP_SUMMARY
+          echo "| AWS Auth |  |" >> $GITHUB_STEP_SUMMARY
+          echo "| Docker Build |  |" >> $GITHUB_STEP_SUMMARY
+          echo "| ECR Push |  |" >> $GITHUB_STEP_SUMMARY
+          echo "| Health Check |  |" >> $GITHUB_STEP_SUMMARY
+          echo "| Terraform Validate |  |" >> $GITHUB_STEP_SUMMARY
           echo "**Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
           echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
           echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
