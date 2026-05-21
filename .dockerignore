@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# Terraform — never in Docker image
+terraform/
+.terraform/
+*.tfstate
+*.tfvars
+
+# Scripts
+scripts/
+
+# Architecture docs
+architecture/
+
+# GitHub
+.github/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Environment files — never in image
+.env
+.env.*
+*.env
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker itself
+Dockerfile
+.dockerignore
