@@ -1,4 +1,3 @@
-# Secrets Manager — stores DB credentials securely (never hardcoded)
 resource "aws_secretsmanager_secret" "db_credentials" {
   name                    = "${local.name_prefix}/rds/credentials"
   description             = "RDS master credentials"
@@ -17,7 +16,6 @@ resource "aws_secretsmanager_secret_version" "db_credentials" {
   })
 }
 
-# RDS requires subnet group spanning 2 AZs
 resource "aws_db_subnet_group" "main" {
   name        = "${local.name_prefix}-db-subnet-group"
   description = "Private DB subnets for RDS"
@@ -26,20 +24,31 @@ resource "aws_db_subnet_group" "main" {
 }
 
 resource "aws_db_parameter_group" "main" {
-  name   = "${local.name_prefix}-pg15-params"
-  family = "postgres15"
+  name        = "${local.name_prefix}-pg15-params"
+  family      = "postgres15"
   description = "Custom params for ${local.name_prefix} PostgreSQL 15"
 
-  parameter { name = "log_connections";    value = "1" }
-  parameter { name = "log_disconnections"; value = "1" }
-  parameter { name = "log_min_duration_statement"; value = "1000" }
+  parameter {
+    name  = "log_connections"
+    value = "1"
+  }
+
+  parameter {
+    name  = "log_disconnections"
+    value = "1"
+  }
+
+  parameter {
+    name  = "log_min_duration_statement"
+    value = "1000"
+  }
 
   tags = { Name = "${local.name_prefix}-pg15-params" }
 }
 
-# IAM role for RDS Enhanced Monitoring
 resource "aws_iam_role" "rds_monitoring" {
   name = "${local.name_prefix}-rds-monitoring-role"
+
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -48,6 +57,7 @@ resource "aws_iam_role" "rds_monitoring" {
       Action    = "sts:AssumeRole"
     }]
   })
+
   tags = { Name = "${local.name_prefix}-rds-monitoring-role" }
 }
 
@@ -56,15 +66,26 @@ resource "aws_iam_role_policy_attachment" "rds_monitoring" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
 }
 
+resource "aws_sns_topic" "alerts" {
+  name = "${local.name_prefix}-alerts"
+  tags = { Name = "${local.name_prefix}-alerts" }
+}
+
+resource "aws_cloudwatch_log_group" "app" {
+  name              = "/ec2/${local.name_prefix}/app"
+  retention_in_days = 30
+  tags              = { Name = "${local.name_prefix}-app-logs" }
+}
+
 resource "aws_db_instance" "main" {
-  identifier        = "${local.name_prefix}-postgres"
-  engine            = var.db_engine
-  engine_version    = var.db_engine_version
-  instance_class    = var.db_instance_class
-  allocated_storage = var.db_allocated_storage
+  identifier            = "${local.name_prefix}-postgres"
+  engine                = var.db_engine
+  engine_version        = var.db_engine_version
+  instance_class        = var.db_instance_class
+  allocated_storage     = var.db_allocated_storage
   max_allocated_storage = 100
-  storage_type      = "gp3"
-  storage_encrypted = true
+  storage_type          = "gp3"
+  storage_encrypted     = true
 
   db_name  = var.db_name
   username = var.db_username
@@ -81,15 +102,20 @@ resource "aws_db_instance" "main" {
   maintenance_window       = "Mon:04:00-Mon:05:00"
   deletion_protection      = var.db_deletion_protection
   skip_final_snapshot      = var.environment != "prod"
-  final_snapshot_identifier = var.environment == "prod" ? "${local.name_prefix}-final-snapshot" : null
-  monitoring_interval      = 60
-  monitoring_role_arn      = aws_iam_role.rds_monitoring.arn
+
+  final_snapshot_identifier = (
+    var.environment == "prod"
+    ? "${local.name_prefix}-final-snapshot"
+    : null
+  )
+
+  monitoring_interval          = 60
+  monitoring_role_arn          = aws_iam_role.rds_monitoring.arn
   performance_insights_enabled = true
 
   tags = { Name = "${local.name_prefix}-postgres", Role = "primary-database" }
 }
 
-# CloudWatch alarms
 resource "aws_cloudwatch_metric_alarm" "rds_cpu_high" {
   alarm_name          = "${local.name_prefix}-rds-cpu-high"
   comparison_operator = "GreaterThanThreshold"
@@ -100,8 +126,14 @@ resource "aws_cloudwatch_metric_alarm" "rds_cpu_high" {
   statistic           = "Average"
   threshold           = 80
   alarm_description   = "RDS CPU > 80%"
-  dimensions          = { DBInstanceIdentifier = aws_db_instance.main.identifier }
-  tags                = { Name = "${local.name_prefix}-rds-cpu-alarm" }
+  alarm_actions       = [aws_sns_topic.alerts.arn]
+  ok_actions          = [aws_sns_topic.alerts.arn]
+
+  dimensions = {
+    DBInstanceIdentifier = aws_db_instance.main.identifier
+  }
+
+  tags = { Name = "${local.name_prefix}-rds-cpu-alarm" }
 }
 
 resource "aws_cloudwatch_metric_alarm" "rds_storage_low" {
@@ -114,6 +146,11 @@ resource "aws_cloudwatch_metric_alarm" "rds_storage_low" {
   statistic           = "Average"
   threshold           = 5368709120
   alarm_description   = "RDS free storage < 5GB"
-  dimensions          = { DBInstanceIdentifier = aws_db_instance.main.identifier }
-  tags                = { Name = "${local.name_prefix}-rds-storage-alarm" }
+  alarm_actions       = [aws_sns_topic.alerts.arn]
+
+  dimensions = {
+    DBInstanceIdentifier = aws_db_instance.main.identifier
+  }
+
+  tags = { Name = "${local.name_prefix}-rds-storage-alarm" }
 }
